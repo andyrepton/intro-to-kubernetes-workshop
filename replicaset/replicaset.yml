@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  labels:
+    app: replica-set
+  name: replica-set
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: replica-set
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: replica-set
+    spec:
+      containers:
+      - image: nginx:1.12
+        imagePullPolicy: IfNotPresent
+        name: replica-set
+        ports:
+        - containerPort: 80
+          name: web
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 80
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+      restartPolicy: Always
